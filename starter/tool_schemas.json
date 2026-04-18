@@ -1,0 +1,39 @@
+{
+  "weather": {
+    "tool": "weather",
+    "args": {
+      "location": "str",
+      "unit": "C|F"
+    }
+  },
+  "calendar": {
+    "tool": "calendar",
+    "args": {
+      "action": "list|create",
+      "date": "YYYY-MM-DD",
+      "title": "str?"
+    }
+  },
+  "convert": {
+    "tool": "convert",
+    "args": {
+      "value": "num",
+      "from_unit": "str",
+      "to_unit": "str"
+    }
+  },
+  "currency": {
+    "tool": "currency",
+    "args": {
+      "amount": "num",
+      "from": "ISO3",
+      "to": "ISO3"
+    }
+  },
+  "sql": {
+    "tool": "sql",
+    "args": {
+      "query": "str"
+    }
+  }
+}
