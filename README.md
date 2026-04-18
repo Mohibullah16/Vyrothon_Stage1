@@ -38,6 +38,15 @@ We use **QLoRA** (Quantized Low-Rank Adaptation) to efficiently fine-tune the `H
 - **Optimization:** 3 Epochs, effective batch size of 16, `paged_adamw_8bit` optimizer, and cosine learning rate scheduling.
 - **Data Formatting:** Dynamic padding via DataCollator to avoid padding token limits.
 
+## 🗜️ Post-Training & Quantization (GGUF)
+
+Once the model is fine-tuned, it must be optimized to run natively on mobile devices. The `train.ipynb` notebook handles the entire post-processing pipeline:
+
+1. **Merging:** The LoRA adapter weights are securely merged into the FP16 base model weights to create a standalone model.
+2. **GGUF Conversion:** Using `llama.cpp` (`convert_hf_to_gguf.py`), the HuggingFace model is converted into the optimized `.gguf` FP16 format.
+3. **Target Quantization:** The FP16 model is further quantized using `llama-quantize` to the **Q2_K** format. The ultimate goal is to compress the model to fit within a strict **< 500 MB** memory footprint (with a stretch goal of < 250 MB).
+4. **Verification:** A final inference pass is run to verify the quantized model retains its tool-calling integrity.
+
 ## 🧪 Evaluation (`starter/`)
 
 The `starter/` directory contains everything needed to test and evaluate the model:
@@ -45,8 +54,3 @@ The `starter/` directory contains everything needed to test and evaluate the mod
 - `teacher_examples.jsonl`: 20 high-quality seed examples of expected inputs and outputs.
 - `public_test.jsonl`: A test set to validate model performance locally before submission.
 - `tool_schemas.json`: A reference for the expected tool arguments.
-
-## 📦 Next Steps (In Progress)
-- Export the trained LoRA adapter and merge it with the base model.
-- Convert the merged model to `.gguf` format using `llama.cpp` for fast, lightweight on-device inference.
-- Quantize the `.gguf` file to fit within a strict 500 MB memory limit.
